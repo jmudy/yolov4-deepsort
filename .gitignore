@@ -132,4 +132,4 @@ dmypy.json
 checkpoints/
 core/__pycache__/
 deep_sort/__pycache__/
-outputs/*
+outputs/*.avi
