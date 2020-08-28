@@ -38,6 +38,7 @@ flags.DEFINE_float('iou', 0.45, 'iou threshold')
 flags.DEFINE_float('score', 0.50, 'score threshold')
 flags.DEFINE_boolean('dont_show', False, 'dont show video output')
 flags.DEFINE_boolean('info', False, 'show detailed info of tracked objects')
+flags.DEFINE_boolean('count', False, 'count objects being tracked on screen')
 
 def main(_argv):
     # Definition of the parameters
@@ -159,7 +160,7 @@ def main(_argv):
         allowed_classes = list(class_names.values())
         
         # custom allowed classes (uncomment line below to customize tracker for only people)
-        #allowed_classes = ['person']
+        #allowed_classes = ['person', 'handbag', 'backpack', 'suitcase']
 
         # loop through objects and use class index to get class name, allow only classes in allowed_classes list
         names = []
@@ -172,6 +173,11 @@ def main(_argv):
             else:
                 names.append(class_name)
         names = np.array(names)
+        count = len(names)
+
+        if FLAGS.count:
+            cv2.putText(frame, "Objects being tracked: {}".format(count), (5, 35), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (0, 255, 0), 2)
+            print("Objects being tracked: {}".format(count))
 
         # delete detections that are not in allowed_classes
         bboxes = np.delete(bboxes, deleted_indx, axis=0)
