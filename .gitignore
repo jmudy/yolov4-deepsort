@@ -128,8 +128,10 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Added by me
 *.weights
 checkpoints/
 core/__pycache__/
 deep_sort/__pycache__/
 outputs/*.avi
+data/video/video1.avi

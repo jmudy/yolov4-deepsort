@@ -1,6 +1,6 @@
 import os
 # comment out below line to enable tensorflow logging outputs
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import time
 import tensorflow as tf
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
@@ -176,7 +176,7 @@ def main(_argv):
         count = len(names)
 
         if FLAGS.count:
-            cv2.putText(frame, "Objects being tracked: {}".format(count), (5, 35), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (0, 255, 0), 2)
+            cv2.putText(frame, "Objects being tracked: {}".format(count), (5, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
             print("Objects being tracked: {}".format(count))
 
         # delete detections that are not in allowed_classes
@@ -223,6 +223,8 @@ def main(_argv):
         # calculate frames per second of running detections
         fps = 1.0 / (time.time() - start_time)
         print("FPS: %.2f" % fps)
+        cv2.putText(frame, "FPS: %.2f" % fps, (5, 50), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (255, 255, 0), 1)
+
         result = np.asarray(frame)
         result = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         

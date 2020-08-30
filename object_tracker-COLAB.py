@@ -1,6 +1,6 @@
 import os
 # comment out below line to enable tensorflow logging outputs
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import time
 import tensorflow as tf
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
@@ -38,6 +38,7 @@ flags.DEFINE_float('iou', 0.45, 'iou threshold')
 flags.DEFINE_float('score', 0.50, 'score threshold')
 flags.DEFINE_boolean('dont_show', False, 'dont show video output')
 flags.DEFINE_boolean('info', False, 'show detailed info of tracked objects')
+flags.DEFINE_boolean('count', False, 'count objects being tracked on screen')
 
 def main(_argv):
     # Definition of the parameters
@@ -156,10 +157,10 @@ def main(_argv):
         class_names = utils.read_class_names(cfg.YOLO.CLASSES)
 
         # by default allow all classes in .names file
-        #allowed_classes = list(class_names.values())
+        allowed_classes = list(class_names.values())
         
         # custom allowed classes (uncomment line below to customize tracker for only people)
-        allowed_classes = ['person', 'backpack', 'handbag', 'suitcase']
+        #allowed_classes = ['person', 'handbag', 'backpack', 'suitcase']
 
         # loop through objects and use class index to get class name, allow only classes in allowed_classes list
         names = []
@@ -172,6 +173,11 @@ def main(_argv):
             else:
                 names.append(class_name)
         names = np.array(names)
+        count = len(names)
+
+        if FLAGS.count:
+            cv2.putText(frame, "Objects being tracked: {}".format(count), (5, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
+            print("Objects being tracked: {}".format(count))
 
         # delete detections that are not in allowed_classes
         bboxes = np.delete(bboxes, deleted_indx, axis=0)
@@ -217,6 +223,8 @@ def main(_argv):
         # calculate frames per second of running detections
         fps = 1.0 / (time.time() - start_time)
         print("FPS: %.2f" % fps)
+        cv2.putText(frame, "FPS: %.2f" % fps, (5, 50), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (255, 255, 0), 1)
+
         result = np.asarray(frame)
         result = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         
