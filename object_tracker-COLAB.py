@@ -157,10 +157,10 @@ def main(_argv):
         class_names = utils.read_class_names(cfg.YOLO.CLASSES)
 
         # by default allow all classes in .names file
-        allowed_classes = list(class_names.values())
+        #allowed_classes = list(class_names.values())
         
         # custom allowed classes (uncomment line below to customize tracker for only people)
-        #allowed_classes = ['person', 'handbag', 'backpack', 'suitcase']
+        allowed_classes = ['person', 'bag']
 
         # loop through objects and use class index to get class name, allow only classes in allowed_classes list
         names = []
@@ -224,6 +224,7 @@ def main(_argv):
         fps = 1.0 / (time.time() - start_time)
         print("FPS: %.2f" % fps)
         cv2.putText(frame, "FPS: %.2f" % fps, (5, 50), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (255, 255, 0), 1)
+        cv2.putText(frame, "GPU: NVIDIA Tesla T4", (5, 70), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (100, 255, 0), 1)
 
         result = np.asarray(frame)
         result = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
