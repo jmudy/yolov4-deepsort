@@ -218,18 +218,18 @@ def main(_argv):
 
         count = len(names)
         if FLAGS.count:
-            cv2.putText(frame, "Objects being tracked: {}".format(count), (5, 70), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
+            cv2.putText(frame, "Objects being tracked: {}".format(count), (5, 70), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 2)
             print("Objects being tracked: {}".format(count))
 
         # calculate frames per second of running detections
         fps = 1.0 / (time.time() - start_time)
         print("FPS: %.2f" % fps)
-        cv2.putText(frame, "FPS: %.2f" % fps, (5, 50), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
+        cv2.putText(frame, "FPS: %.2f" % fps, (5, 50), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 2)
 
         # draw the timestamp on the frame
         timestamp = datetime.datetime.now()
         ts = timestamp.strftime("%d/%m/%Y, %H:%M:%S")
-        cv2.putText(frame, ts, (5, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
+        cv2.putText(frame, ts, (5, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 2)
 
         result = np.asarray(frame)
         result = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
