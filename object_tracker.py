@@ -225,6 +225,7 @@ def main(_argv):
         fps = 1.0 / (time.time() - start_time)
         print("FPS: %.2f" % fps)
         cv2.putText(frame, "FPS: %.2f" % fps, (5, 50), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
+        cv2.putText(frame, "GPU: NVIDIA GEFORCE GTX 960M", (5, 90), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
 
         # draw the timestamp on the frame
         timestamp = datetime.datetime.now()
