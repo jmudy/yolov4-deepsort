@@ -158,10 +158,10 @@ def main(_argv):
         class_names = utils.read_class_names(cfg.YOLO.CLASSES)
 
         # by default allow all classes in .names file
-        allowed_classes = list(class_names.values())
+        #allowed_classes = list(class_names.values())
         
         # custom allowed classes (uncomment line below to customize tracker for only people)
-        #allowed_classes = ['person', 'handbag', 'backpack', 'suitcase']
+        allowed_classes = ['person', 'handbag', 'backpack', 'suitcase']
 
         # loop through objects and use class index to get class name, allow only classes in allowed_classes list
         names = []
@@ -218,18 +218,18 @@ def main(_argv):
 
         count = len(names)
         if FLAGS.count:
-            cv2.putText(frame, "Objects being tracked: {}".format(count), (5, 70), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 2)
+            cv2.putText(frame, "Objects being tracked: {}".format(count), (5, 70), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
             print("Objects being tracked: {}".format(count))
 
         # calculate frames per second of running detections
         fps = 1.0 / (time.time() - start_time)
         print("FPS: %.2f" % fps)
-        cv2.putText(frame, "FPS: %.2f" % fps, (5, 50), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 2)
+        cv2.putText(frame, "FPS: %.2f" % fps, (5, 50), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
 
         # draw the timestamp on the frame
         timestamp = datetime.datetime.now()
         ts = timestamp.strftime("%d/%m/%Y, %H:%M:%S")
-        cv2.putText(frame, ts, (5, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 2)
+        cv2.putText(frame, ts, (5, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
 
         result = np.asarray(frame)
         result = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
