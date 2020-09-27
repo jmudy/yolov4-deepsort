@@ -26,9 +26,9 @@ from deep_sort.detection import Detection
 from deep_sort.tracker import Tracker
 from tools import generate_detections as gdet
 
+# flags
 flags.DEFINE_string('framework', 'tf', '(tf, tflite, trt')
-flags.DEFINE_string('weights', './checkpoints/yolov4-416',
-                    'path to weights file')
+flags.DEFINE_string('weights', './checkpoints/yolov4-416','path to weights file')
 flags.DEFINE_integer('size', 416, 'resize images to')
 flags.DEFINE_boolean('tiny', False, 'yolo or yolo-tiny')
 flags.DEFINE_string('model', 'yolov4', 'yolov3 or yolov4')
@@ -40,13 +40,8 @@ flags.DEFINE_float('score', 0.50, 'score threshold')
 flags.DEFINE_boolean('dont_show', False, 'dont show video output')
 flags.DEFINE_boolean('info', False, 'show detailed info of tracked objects')
 flags.DEFINE_boolean('count', False, 'count objects being tracked on screen')
-flags.DEFINE_boolean('cloud', False, 'enable running of deepsort in google colab etc.') 
 
 def main(_argv):
-
-    # for running in Google Colab
-    if FLAGS.cloud:
-        from google.colab.patches import cv2_imshow
 
     # Definition of the parameters
     max_cosine_distance = 0.4
@@ -98,7 +93,8 @@ def main(_argv):
         fps = int(vid.get(cv2.CAP_PROP_FPS))
         codec = cv2.VideoWriter_fourcc(*FLAGS.output_format)
         out = cv2.VideoWriter(FLAGS.output, codec, fps, (width, height))
-
+    
+    frame_num = 0
     # while video is running
     while True:
         return_value, frame = vid.read()
@@ -108,7 +104,10 @@ def main(_argv):
         else:
             print('Video has ended or failed, try a different video format!')
             break
-    
+
+        frame_num +=1
+        print('Frame #: ', frame_num)   
+         
         frame_size = frame.shape[:2]
         image_data = cv2.resize(frame, (input_size, input_size))
         image_data = image_data / 255.
@@ -241,12 +240,9 @@ def main(_argv):
         result = np.asarray(frame)
         result = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
-        if FLAGS.cloud:
-            cv2_imshow(result)
-        else:
-            if not FLAGS.dont_show:
-                cv2.imshow("DeepSort Object Tracker", result)
-                
+        if not FLAGS.dont_show:
+            cv2.imshow("Output Video", result)
+
         # if output flag is set, save video file
         if FLAGS.output:
             out.write(result)
