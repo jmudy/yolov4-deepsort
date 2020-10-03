@@ -213,9 +213,28 @@ def main(_argv):
         # draw bbox on screen
             color = colors[int(track.track_id) % len(colors)]
             color = [i * 255 for i in color]
-            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
-            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*17, int(bbox[1])), color, -1)
-            cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-10)),0, 0.75, (255,255,255),2)
+            
+            color1 = colors[int(track.track_id) % len(colors)]
+            color1 = (103, 52, 219)
+            
+            color2 = colors[int(track.track_id) % len(colors)]
+            color2 = (10, 247, 100)
+
+            # all classes
+            #cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
+            #cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*17, int(bbox[1])), color, -1)
+            #cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-10)),0, 0.75, (255,255,255),2)
+
+            # only person, handbag, backpack and suitcase
+            if class_name == 'person':
+                cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), color1, 2)
+                cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*17, int(bbox[1])), color1, -1)
+                cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-10)),0, 0.75, (255,255,255),2)
+
+            elif class_name == 'handbag' or 'backpack' or 'suitcase':
+                cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), color2, 2)
+                cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*17, int(bbox[1])), color2, -1)
+                cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-10)),0, 0.75, (255,255,255),2)
 
         # if enable info flag then print details about each track
             if FLAGS.info:
@@ -223,19 +242,20 @@ def main(_argv):
 
         count = len(names)
         if FLAGS.count:
-            cv2.putText(frame, "Objects being tracked: {}".format(count), (5, 70), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
+            cv2.putText(frame, "Objects being tracked: {}".format(count), (5, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 251, 0), 1)
             print("Objects being tracked: {}".format(count))
 
         # calculate frames per second of running detections
         fps = 1.0 / (time.time() - start_time)
         print("FPS: %.2f" % fps)
-        cv2.putText(frame, "FPS: %.2f" % fps, (5, 50), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
-        cv2.putText(frame, "GPU: NVIDIA GEFORCE GTX 960M", (5, 90), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
+        cv2.putText(frame, "FPS: %.2f" % fps, (5, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 251, 0), 1)
+        cv2.putText(frame, "GPU: NVIDIA GEFORCE GTX 960M", (5, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 251, 0), 1)
 
         # draw the timestamp on the frame
-        timestamp = datetime.datetime.now()
-        ts = timestamp.strftime("%d/%m/%Y, %H:%M:%S")
-        cv2.putText(frame, ts, (5, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0, 255, 0), 1)
+        # use only on local computer. With Google Colab it is not accurate
+        #timestamp = datetime.datetime.now()
+        #ts = timestamp.strftime("%d/%m/%Y, %H:%M:%S") 
+        #cv2.putText(frame, ts, (5, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 251, 0), 1)
 
         result = np.asarray(frame)
         result = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
