@@ -29,8 +29,7 @@ from tools import generate_detections as gdet
 
 # flags
 flags.DEFINE_string('framework', 'tf', '(tf, tflite, trt')
-flags.DEFINE_string('weights', './checkpoints/yolov4-416',
-                    'path to weights file')
+flags.DEFINE_string('weights', './checkpoints/yolov4-416', 'path to weights file')
 flags.DEFINE_integer('size', 416, 'resize images to')
 flags.DEFINE_boolean('tiny', False, 'yolo or yolo-tiny')
 flags.DEFINE_string('model', 'yolov4', 'yolov3 or yolov4')
@@ -66,7 +65,6 @@ class tf_lite_ngine:
             boxes, pred_conf = filter_boxes(pred[0], pred[1], score_threshold=0.25,
                                             input_shape=tf.constant([input_size, input_size]))
         return boxes, pred_conf
-
 
 def init_deepsort_params():
     # Definition of the parameters
@@ -175,13 +173,21 @@ def process_detections(tracker, detections, nms_max_overlap, frame):
         class_name = track.get_class()
         
         # draw bbox on screen
+        # all classes
+        #color = colors[int(track.track_id) % len(colors)]
+        #color = [i * 255 for i in color]
+
+        #cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
+        #cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*17, int(bbox[1])), color, -1)
+        #cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-10)),0, 0.75, (255,255,255),2)
+
+        # only person, handbag, backpack and suitcase
         color1 = colors[int(track.track_id) % len(colors)]
         color1 = (103, 52, 219)
 
         color2 = colors[int(track.track_id) % len(colors)]
         color2 = (10, 247, 100)
 
-        # only person, handbag, backpack and suitcase
         if class_name == 'person':
             cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), color1, 2)
             cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*17, int(bbox[1])), color1, -1)
@@ -192,13 +198,11 @@ def process_detections(tracker, detections, nms_max_overlap, frame):
             cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*17, int(bbox[1])), color2, -1)
             cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-10)),0, 0.75, (255,255,255),2)
 
-
         # if enable info flag then print details about each track
         if FLAGS.info:
             print("Tracker ID: {}, Class: {},  BBox Coords (xmin, ymin, xmax, ymax): {}".format(str(track.track_id), 
                 class_name, (int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3]))))
     return frame
-
 
 def get_video_stream(video_path):
     try:
@@ -221,7 +225,6 @@ def detections_to_np_array(detections, boxes, scores, classes):
     classes = classes.numpy()[0]
     classes = classes[0:int(num_objects)]
     return num_objects, bboxes, scores, classes
-
 
 def main(_argv):
     # Definition of the parameters
