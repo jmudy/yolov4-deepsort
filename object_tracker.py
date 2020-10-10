@@ -175,18 +175,11 @@ def process_detections(tracker, detections, nms_max_overlap, frame):
         class_name = track.get_class()
         
         # draw bbox on screen
-        color = colors[int(track.track_id) % len(colors)]
-        color = [i * 255 for i in color]
-
         color1 = colors[int(track.track_id) % len(colors)]
         color1 = (103, 52, 219)
 
         color2 = colors[int(track.track_id) % len(colors)]
         color2 = (10, 247, 100)
-
-        #cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
-        #cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*17, int(bbox[1])), color, -1)
-        #cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-10)),0, 0.75, (255,255,255),2)
 
         # only person, handbag, backpack and suitcase
         if class_name == 'person':
