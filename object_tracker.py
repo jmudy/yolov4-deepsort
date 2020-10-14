@@ -100,8 +100,13 @@ def init_video_out(vid):
 def print_fps(start_time, end_time, frame):
     fps = 1.0 / (end_time - start_time)
     print("FPS: %.2f" % fps)
-    cv2.putText(frame, "FPS: %.2f" % fps, (5, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 251, 0), 1)
-    cv2.putText(frame, "GPU: NVIDIA GEFORCE GTX 960M", (5, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 251, 0), 1)
+    cv2.putText(frame, "FPS: %.2f" % fps, (5, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.60, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(frame, "GPU: NVIDIA GEFORCE GTX 960M", (5, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.60, (255, 255, 0), 1, cv2.LINE_AA)
+
+def show_tracked_object_count(names, frame):
+    count = len(names)
+    cv2.putText(frame, "Objects being tracked: {}".format(count), (5, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.60, (255, 255, 0), 1, cv2.LINE_AA)
+    print("Objects being tracked: {}".format(count))
 
 def apply_tf_nms(boxes, pred_conf):
     """
@@ -178,25 +183,25 @@ def process_detections(tracker, detections, nms_max_overlap, frame):
         #color = [i * 255 for i in color]
 
         #cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
-        #cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*17, int(bbox[1])), color, -1)
-        #cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-10)),0, 0.75, (255,255,255),2)
+        #cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-20)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*12, int(bbox[1])), color, -1)
+        #cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-5)), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (255,255,255), 1, cv2.LINE_AA)
 
         # only person, handbag, backpack and suitcase
         color1 = colors[int(track.track_id) % len(colors)]
-        color1 = (103, 52, 219)
+        color1 = (50, 203, 115)
 
         color2 = colors[int(track.track_id) % len(colors)]
-        color2 = (10, 247, 100)
+        color2 = (50, 138, 203)
 
         if class_name == 'person':
-            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), color1, 2)
-            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*17, int(bbox[1])), color1, -1)
-            cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-10)),0, 0.75, (255,255,255),2)
+            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), color1, 1)
+            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-20)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*12, int(bbox[1])), color1, -1)
+            cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-5)), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (255,255,255), 1, cv2.LINE_AA)
 
         elif class_name == 'handbag' or 'backpack' or 'suitcase':
-            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), color2, 2)
-            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*17, int(bbox[1])), color2, -1)
-            cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-10)),0, 0.75, (255,255,255),2)
+            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), color2, 1)
+            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1]-20)), (int(bbox[0])+(len(class_name)+len(str(track.track_id)))*12, int(bbox[1])), color2, -1)
+            cv2.putText(frame, class_name + "-" + str(track.track_id),(int(bbox[0]), int(bbox[1]-5)), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (255,255,255), 1, cv2.LINE_AA)
 
         # if enable info flag then print details about each track
         if FLAGS.info:
@@ -210,11 +215,6 @@ def get_video_stream(video_path):
     except:
         vid = cv2.VideoCapture(video_path)
     return vid
-
-def show_tracked_object_count(names, frame):
-    count = len(names)
-    cv2.putText(frame, "Objects being tracked: {}".format(count), (5, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 251, 0), 1)
-    print("Objects being tracked: {}".format(count))
 
 def detections_to_np_array(detections, boxes, scores, classes):
     num_objects = detections.numpy()[0]
