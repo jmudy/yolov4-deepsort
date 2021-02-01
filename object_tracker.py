@@ -212,8 +212,26 @@ def process_detections(tracker, detections, nms_max_overlap, frame):
 def get_video_stream(video_path):
     try:
         vid = cv2.VideoCapture(int(video_path))
+        """
+        Descomentar las siguientes lineas si se utiliza una webcam 
+        con la que, por defecto, cv2.VideoCapture() coge una resolucion
+        mas baja de 1080p
+        """
+        #width, height = 1920, 1080
+        #vid.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+        #vid.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+        
     except:
         vid = cv2.VideoCapture(video_path)
+        """
+        Descomentar las siguientes lineas si se utiliza una webcam 
+        con la que, por defecto, cv2.VideoCapture() coge una resolucion
+        mas baja de 1080p
+        """
+        #width, height = 1920, 1080
+        #vid.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+        #vid.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+        
     return vid
 
 def detections_to_np_array(detections, boxes, scores, classes):
